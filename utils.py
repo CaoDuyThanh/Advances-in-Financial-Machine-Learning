@@ -1,3 +1,4 @@
+from pathlib import PurePath, Path
 import pandas as pd 
 import numpy as np 
 import scipy.stats as stats
@@ -183,3 +184,17 @@ def jb(x, test=True):
 def shapiro(x, test = True):
     if test: return stats.shapiro(x)[0]
     return stats.shapiro(x)[1]
+
+def get_relative_project_dir(project_repo_name=None, partial=True):
+    """helper fn to get local project directory"""
+    current_working_directory = Path.cwd()
+    cwd_parts = current_working_directory.parts
+    if partial:
+        while project_repo_name not in cwd_parts[-1]:
+            current_working_directory = current_working_directory.parent
+            cwd_parts = current_working_directory.parts
+    else:
+        while cwd_parts[-1] != project_repo_name:
+            current_working_directory = current_working_directory.parent
+            cwd_parts = current_working_directory.parts
+    return current_working_directory
